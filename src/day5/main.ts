@@ -22,18 +22,18 @@ function intCodeMachine(d: number[], input = 1) {
         const mode1 = Number(str[2]);
         const mode2 = Number(str[1]);
         const mode3 = Number(str[0]);
-        const v1 = retrieveData(d, mode1, i+1);
-        const v2 = retrieveData(d, mode2, i+2);
+        const p1 = retrieveData(d, mode1, i+1);
+        const p2 = retrieveData(d, mode2, i+2);
         let resPos = d[i+3];
         let skipLength = 4;
         switch (opCode) {
             case 99: return;
             case 1: {
-                d[resPos] = v1 + v2;
+                d[resPos] = p1 + p2;
                 break;
             }
             case 2: {
-                d[resPos] = v1 * v2;
+                d[resPos] = p1 * p2;
                 break;
             }
             case 3: {
@@ -43,8 +43,40 @@ function intCodeMachine(d: number[], input = 1) {
                 break;
             }
             case 4: {
-                console.log(v1);
+                console.log(p1);
                 skipLength = 2;
+                break;
+            }
+            case 5: {
+                if (p1 !== 0) {
+                    i = p2;
+                    continue;
+                }
+                skipLength = 3;
+                break;
+            }
+            case 6: {
+                if (p1 === 0) {
+                    i = p2;
+                    continue;
+                }
+                skipLength = 3;
+                break;
+            }
+            case 7: {
+                if (p1 < p2) {
+                    d[resPos] = 1;
+                } else {
+                    d[resPos] = 0;
+                }
+                break;
+            }
+            case 8: {
+                if (p1 === p2) {
+                    d[resPos] = 1;
+                } else {
+                    d[resPos] = 0;
+                }
                 break;
             }
             default: {
@@ -56,8 +88,13 @@ function intCodeMachine(d: number[], input = 1) {
 }
 
 function run() {
+    console.log("Running part 1:")
     const res1 = _.cloneDeep(data);
     intCodeMachine(res1);    
+
+    console.log("Running part 2:")
+    const res2 = _.cloneDeep(data);
+    intCodeMachine(res2, 5);    
 }
 
 run();
